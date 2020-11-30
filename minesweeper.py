@@ -1,5 +1,49 @@
 import pygame
+import clips
 import time
+
+
+#################
+## CCLIPS PART ##
+
+def assertFact():
+    stringz = """(opened (x 0) (y 1))
+    (opened (x 1) (y 0))
+    (opened (x 1) (y 1))
+    (opened (x 1) (y 2))
+    (opened (x 1) (y 3))
+    (opened (x 2) (y 0))
+    (opened (x 2) (y 2))
+    (opened (x 2) (y 3))
+    (opened (x 3) (y 0))
+    (opened (x 3) (y 1))
+    (opened (x 3) (y 2))
+    (bomb (x 0) (y 0))
+    (bomb (x 0) (y 3))
+    (bomb (x 3) (y 3))
+
+    (tile (x 0) (y 0) (hidden_neigh 0) (flag_neigh 0) (value -2))
+    (tile (x 0) (y 1) (hidden_neigh 1) (flag_neigh 1) (value 1))
+    (tile (x 0) (y 2) (hidden_neigh 0) (flag_neigh 1) (value -1))
+    (tile (x 0) (y 3) (hidden_neigh 1) (flag_neigh 0) (value -2))
+    (tile (x 1) (y 0) (hidden_neigh 1) (flag_neigh 1) (value 2))
+    (tile (x 1) (y 1) (hidden_neigh 2) (flag_neigh 1) (value 2))
+    (tile (x 1) (y 2) (hidden_neigh 2) (flag_neigh 1) (value 2))
+    (tile (x 1) (y 3) (hidden_neigh 1) (flag_neigh 1) (value 1))
+    (tile (x 2) (y 0) (hidden_neigh 1) (flag_neigh 0) (value 1))
+    (tile (x 2) (y 1) (hidden_neigh 0) (flag_neigh 0) (value -1))
+    (tile (x 2) (y 2) (hidden_neigh 1) (flag_neigh 1) (value 2))
+    (tile (x 2) (y 3) (hidden_neigh 0) (flag_neigh 1) (value 1))
+    (tile (x 3) (y 0) (hidden_neigh 1) (flag_neigh 0) (value 1))
+    (tile (x 3) (y 1) (hidden_neigh 1) (flag_neigh 0) (value 1))
+    (tile (x 3) (y 2) (hidden_neigh 1) (flag_neigh 1) (value 2))
+    (tile (x 3) (y 3) (hidden_neigh 0) (flag_neigh 0) (value -2))"""
+
+    print(stringz)
+    return stringz
+
+#################
+## CCLIPS PART ##
 
 class isiPapan(object):
     def __init__(self,status,visibility):
@@ -60,7 +104,10 @@ class papan(object):
                     self.isi[x+1][y].status += 1 # bottom center
 
     def draw(self):
-        print("O- 0 1 2 3 4 5 6 7 8 9")
+        print("O-",end = " ")
+        for i in range(size):
+            print(i,end=" ")
+        print()
         for x in range(size):
             print(str(x) + "-",end =" ")
             for y in range(size):
@@ -174,6 +221,65 @@ else:
     print()
     print()
     game = papan(size,arBomb)
+
+    env = clips.Environment()
+    env.load('minesweeper3.clp')
+
+    faktas = [
+        "(opened (x 0) (y 1))",
+        "(opened (x 1) (y 0))",
+        "(opened (x 1) (y 1))",
+        "(opened (x 1) (y 2))",
+        "(opened (x 1) (y 3))",
+        "(opened (x 2) (y 0))",
+        "(opened (x 2) (y 2))",
+        "(opened (x 2) (y 3))",
+        "(opened (x 3) (y 0))",
+        "(opened (x 3) (y 1))",
+        "(opened (x 3) (y 2))",
+        "(bomb (x 0) (y 0))",
+        "(bomb (x 0) (y 3))",
+        "(bomb (x 3) (y 3))",
+        "(tile (x 0) (y 0) (hidden_neigh 0) (flag_neigh 0) (value -2))",
+        "(tile (x 0) (y 1) (hidden_neigh 1) (flag_neigh 1) (value 1))",
+        "(tile (x 0) (y 2) (hidden_neigh 0) (flag_neigh 1) (value -1))",
+        "(tile (x 0) (y 3) (hidden_neigh 1) (flag_neigh 0) (value -2))",
+        "(tile (x 1) (y 0) (hidden_neigh 1) (flag_neigh 1) (value 2))",
+        "(tile (x 1) (y 1) (hidden_neigh 2) (flag_neigh 1) (value 2))",
+        "(tile (x 1) (y 2) (hidden_neigh 2) (flag_neigh 1) (value 2))",
+        "(tile (x 1) (y 3) (hidden_neigh 1) (flag_neigh 1) (value 1))",
+        "(tile (x 2) (y 0) (hidden_neigh 1) (flag_neigh 0) (value 1))",
+        "(tile (x 2) (y 1) (hidden_neigh 0) (flag_neigh 0) (value -1))",
+        "(tile (x 2) (y 2) (hidden_neigh 1) (flag_neigh 1) (value 2))",
+        "(tile (x 2) (y 3) (hidden_neigh 0) (flag_neigh 1) (value 1))",
+        "(tile (x 3) (y 0) (hidden_neigh 1) (flag_neigh 0) (value 1))",
+        "(tile (x 3) (y 1) (hidden_neigh 1) (flag_neigh 0) (value 1))",
+        "(tile (x 3) (y 2) (hidden_neigh 1) (flag_neigh 1) (value 2))",
+        "(tile (x 3) (y 3) (hidden_neigh 0) (flag_neigh 0) (value -2))"
+        ]
+    for fakta in faktas:
+        fact = env.assert_string(fakta)
+
+    # print("ini yang null")
+    # for factz in env.facts():
+    #     print(factz)
+
+    # env.reset()
+
+    print("ini yang pertama")
+    for factz in env.facts():
+        print(factz)
+
+    env.run()
+
+    print("ini yang kedua")
+
+    for factz in env.facts():
+        print(factz)
+
+    print()
+    print()
+
     run = True
     pil = 0
     score = 0
@@ -206,19 +312,3 @@ else:
         game.drawWin()
     else:
         game.drawLose()
-
-    """
-    pygame.init()
-    win = pygame.display.set_mode((1280,720)) # window dari pygamenya, ukurannya 1280x720 pixel
-    pygame.display.set_caption("Let's Play Minesweeper!") # Judul gamenya
-
-    run = True
-    bg = pygame.image.load('bgstart1.png')
-    win.blit(bg, (0,0))
-
-    while run:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-        pygame.display.update()
-    """
