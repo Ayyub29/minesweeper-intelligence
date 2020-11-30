@@ -21,6 +21,15 @@
     (slot y)
 )
 
+(deftemplate decrement_hn
+    (slot x)
+    (slot y)
+)
+
+(deftemplate decrement_fn
+    (slot x)
+    (slot y)
+)
 
 ;;cek bomb
 ;;;(deffacts initial-states 
@@ -116,28 +125,29 @@
     (test (eq ?v1 -1))
 
     
-    
-    
-    
     (or (and (test (eq ?x ?x1)) (or (test (eq ?y (+ ?y1 1))) (test (eq ?y (+ ?y1 -1))))) 
         (or 
             (and (test (eq ?y ?y1)) (or (test (eq ?x (+ ?x1 1))) (test (eq ?x (+ ?x1 -1))) )) 
             (and (or (test (eq ?x (+ ?x1 1))) (test (eq ?x (+ ?x1 -1))))  (or (test (eq ?y (+ ?y1 1))) (test (eq ?y (+ ?y1 -1)))) ) 
         )
     )
-    
-    
-    
-    
-     
-   
-
+ 
     =>
-    
+    (retract ?gg)
     (assert (opened (x ?x1) (y ?y1))
             (tile (x ?x1) (y ?y1) (hidden_neigh ?h1) (flag_neigh ?f1) (value 0))
+            (decrement_fn (x (+ ?x1 -1)) (y (+ ?y1 -1)) )
+            (decrement_fn (x (+ ?x1 -1)) (y ?y1) )
+            (decrement_fn (x (+ ?x1 -1)) (y (+ ?y1 1)) )
+
+            (decrement_fn (x ?x1) (y (+ ?y1 -1)) )
+            (decrement_fn (x ?x1) (y (+ ?y1 1)) )
+
+            (decrement_fn (x (+ ?x1 1)) (y (+ ?y1 -1)) )
+            (decrement_fn (x (+ ?x1 1)) (y ?y1) )
+            (decrement_fn (x (+ ?x1 1)) (y (+ ?y1 1)) )
     )
-    (retract ?gg)
+    
     (printout t "isClear:" crlf)
     (printout t  ?x ?y crlf)
     (printout t  ?x1 ?y1 crlf)
@@ -160,11 +170,21 @@
 
     =>
 
-    
+    (retract ?gg)
     (assert (bomb (x ?x1) (y ?y1))
             (tile (x ?x1) (y ?y1) (hidden_neigh ?h1) (flag_neigh ?f1) (value -2))
+            (decrement_hn (x (+ ?x1 -1)) (y (+ ?y1 -1)) )
+            (decrement_hn (x (+ ?x1 -1)) (y ?y1) )
+            (decrement_hn (x (+ ?x1 -1)) (y (+ ?y1 1)) )
+
+            (decrement_hn (x ?x1) (y (+ ?y1 -1)) )
+            (decrement_hn (x ?x1) (y (+ ?y1 1)) )
+
+            (decrement_hn (x (+ ?x1 1)) (y (+ ?y1 -1)) )
+            (decrement_hn (x (+ ?x1 1)) (y ?y1) )
+            (decrement_hn (x (+ ?x1 1)) (y (+ ?y1 1)) )
     )
-    (retract ?gg)
+    
     (printout t "isBomb:" crlf)
     (printout t  ?x ?y crlf)
     (printout t  ?x1 ?y1 crlf)
@@ -173,4 +193,31 @@
     ;;;(printout t  ?x1 ?y1 crlf)
 )
 
+(defrule change_isBomb
+    ?hh <- (decrement_hn (x ?x) (y ?y))
+    ?gg <- (tile (x ?x) (y ?y) (hidden_neigh ?h) (flag_neigh ?f) (value ?v))
+    (test (neq ?h 0))
+    =>
+    
+    (assert 
+        (tile (x ?x) (y ?y) (hidden_neigh (+ ?h -1)) (flag_neigh (+ ?f 1)) (value ?v))
+    )
+    (retract ?gg ?hh)
+    
+
+
+)
+
+(defrule change_isClear
+    ?hh <- (decrement_fn (x ?x) (y ?y))
+    ?gg <- (tile (x ?x) (y ?y) (hidden_neigh ?h) (flag_neigh ?f) (value ?v))
+    (test (neq ?h 0))
+    =>
+    (assert 
+        (tile (x ?x) (y ?y) (hidden_neigh (+ ?h -1)) (flag_neigh ?f) (value ?v))
+    )
+    (retract ?gg ?hh)
+
+
+)
 
