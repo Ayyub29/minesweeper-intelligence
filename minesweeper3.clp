@@ -31,6 +31,12 @@
     (slot y)
 )
 
+(deftemplate val
+    (slot x)
+    (slot y)
+    (slot v)
+)
+
 ;;cek bomb
 ;;;(deffacts initial-states 
 ;;;    (opened (x 0) (y 0))

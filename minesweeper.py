@@ -6,41 +6,72 @@ import time
 #################
 ## CCLIPS PART ##
 
-def assertFact():
-    stringz = """(opened (x 0) (y 1))
-    (opened (x 1) (y 0))
-    (opened (x 1) (y 1))
-    (opened (x 1) (y 2))
-    (opened (x 1) (y 3))
-    (opened (x 2) (y 0))
-    (opened (x 2) (y 2))
-    (opened (x 2) (y 3))
-    (opened (x 3) (y 0))
-    (opened (x 3) (y 1))
-    (opened (x 3) (y 2))
-    (bomb (x 0) (y 0))
-    (bomb (x 0) (y 3))
-    (bomb (x 3) (y 3))
+# def assertFact():
+#     stringz = """(opened (x 0) (y 1))
+#     (opened (x 1) (y 0))
+#     (opened (x 1) (y 1))
+#     (opened (x 1) (y 2))
+#     (opened (x 1) (y 3))
+#     (opened (x 2) (y 0))
+#     (opened (x 2) (y 2))
+#     (opened (x 2) (y 3))
+#     (opened (x 3) (y 0))
+#     (opened (x 3) (y 1))
+#     (opened (x 3) (y 2))
+#     (bomb (x 0) (y 0))
+#     (bomb (x 0) (y 3))
+#     (bomb (x 3) (y 3))
 
-    (tile (x 0) (y 0) (hidden_neigh 0) (flag_neigh 0) (value -2))
-    (tile (x 0) (y 1) (hidden_neigh 1) (flag_neigh 1) (value 1))
-    (tile (x 0) (y 2) (hidden_neigh 0) (flag_neigh 1) (value -1))
-    (tile (x 0) (y 3) (hidden_neigh 1) (flag_neigh 0) (value -2))
-    (tile (x 1) (y 0) (hidden_neigh 1) (flag_neigh 1) (value 2))
-    (tile (x 1) (y 1) (hidden_neigh 2) (flag_neigh 1) (value 2))
-    (tile (x 1) (y 2) (hidden_neigh 2) (flag_neigh 1) (value 2))
-    (tile (x 1) (y 3) (hidden_neigh 1) (flag_neigh 1) (value 1))
-    (tile (x 2) (y 0) (hidden_neigh 1) (flag_neigh 0) (value 1))
-    (tile (x 2) (y 1) (hidden_neigh 0) (flag_neigh 0) (value -1))
-    (tile (x 2) (y 2) (hidden_neigh 1) (flag_neigh 1) (value 2))
-    (tile (x 2) (y 3) (hidden_neigh 0) (flag_neigh 1) (value 1))
-    (tile (x 3) (y 0) (hidden_neigh 1) (flag_neigh 0) (value 1))
-    (tile (x 3) (y 1) (hidden_neigh 1) (flag_neigh 0) (value 1))
-    (tile (x 3) (y 2) (hidden_neigh 1) (flag_neigh 1) (value 2))
-    (tile (x 3) (y 3) (hidden_neigh 0) (flag_neigh 0) (value -2))"""
+#     (tile (x 0) (y 0) (hidden_neigh 0) (flag_neigh 0) (value -2))
+#     (tile (x 0) (y 1) (hidden_neigh 1) (flag_neigh 1) (value 1))
+#     (tile (x 0) (y 2) (hidden_neigh 0) (flag_neigh 1) (value -1))
+#     (tile (x 0) (y 3) (hidden_neigh 1) (flag_neigh 0) (value -2))
+#     (tile (x 1) (y 0) (hidden_neigh 1) (flag_neigh 1) (value 2))
+#     (tile (x 1) (y 1) (hidden_neigh 2) (flag_neigh 1) (value 2))
+#     (tile (x 1) (y 2) (hidden_neigh 2) (flag_neigh 1) (value 2))
+#     (tile (x 1) (y 3) (hidden_neigh 1) (flag_neigh 1) (value 1))
+#     (tile (x 2) (y 0) (hidden_neigh 1) (flag_neigh 0) (value 1))
+#     (tile (x 2) (y 1) (hidden_neigh 0) (flag_neigh 0) (value -1))
+#     (tile (x 2) (y 2) (hidden_neigh 1) (flag_neigh 1) (value 2))
+#     (tile (x 2) (y 3) (hidden_neigh 0) (flag_neigh 1) (value 1))
+#     (tile (x 3) (y 0) (hidden_neigh 1) (flag_neigh 0) (value 1))
+#     (tile (x 3) (y 1) (hidden_neigh 1) (flag_neigh 0) (value 1))
+#     (tile (x 3) (y 2) (hidden_neigh 1) (flag_neigh 1) (value 2))
+#     (tile (x 3) (y 3) (hidden_neigh 0) (flag_neigh 0) (value -2))"""
 
-    print(stringz)
-    return stringz
+#     print(stringz)
+#     return stringz
+
+def add_opened(x,y):
+    return "(opened (x "+x+") (y "+y+"))"
+
+def add_val(x,y,v):
+    return "(val (x "+x+") (y "+y+") (v "+v+"))"
+
+def add_tile(x,y,h,f,v):
+    return "(tile (x "+x+") (y "+y+") (hidden_neigh "+h+") (flag_neigh "+f+") (value "+v+"))"
+
+def add_decrementfn(x,y):
+    return "(decrement_fn (x "+x+") (y "+y+"))"
+
+def parse_opened(text):
+    print(text)
+    x = text[11]
+    y = text[17]
+    print("opened")
+    print("X : " + x)
+    print("Y : " + y)
+    print( )
+
+def parse_bomb(text):
+    print(text)
+    x = text[9]
+    y = text[15]
+    print("bomb")
+    print("X : " + x)
+    print("Y : " + y)
+    print( )
+    
 
 #################
 ## CCLIPS PART ##
