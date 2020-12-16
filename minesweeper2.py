@@ -147,34 +147,43 @@ class papan(object):
                 if self.isi[x][y+1].visibility == 0:
                     self.open(x,y+1)
                     result_facts.append(add_decrementfn(x,y+1))
+                    result_facts.append(add_opened(x,y+1))
+                    # result_facts.append(add_tile(x,y+1))
             if (y >=1 and y <= self.size-1) and (x >= 0 and x <= self.size-1):
                 if self.isi[x][y-1].visibility == 0:
                     self.open(x,y-1)
                     result_facts.append(add_decrementfn(x,y-1))
+                    result_facts.append(add_opened(x,y-1))
             if (y >= 1 and y <= self.size-1) and (x >= 1 and x <= self.size-1):
                 if self.isi[x-1][y-1].visibility == 0:
                     self.open(x-1,y-1)
                     result_facts.append(add_decrementfn(x-1,y-1))
+                    result_facts.append(add_opened(x-1,y-1))
             if (y >= 0 and y <= self.size-2) and (x >= 1 and x <= self.size-1):
                 if self.isi[x-1][y+1].visibility == 0:
                     self.open(x-1,y+1)
                     result_facts.append(add_decrementfn(x-1,y+1))
+                    result_facts.append(add_opened(x-1,y+1))
             if (y >= 0 and y <= self.size-1) and (x >= 1 and x <= self.size-1):
                 if self.isi[x-1][y].visibility == 0:
                     self.open(x-1,y)
                     result_facts.append(add_decrementfn(x-1,y))
+                    result_facts.append(add_opened(x-1,y))
             if (y >=0 and y <= self.size-2) and (x >= 0 and x <= self.size-2):
                 if self.isi[x+1][y+1].visibility == 0:
                     self.open(x+1,y+1)
                     result_facts.append(add_decrementfn(x+1,y+1))
+                    result_facts.append(add_opened(x+1,y+1))
             if (y >= 1 and y <= self.size-1) and (x >= 0 and x <= self.size-2):
                 if self.isi[x+1][y-1].visibility == 0:
                     self.open(x+1,y-1)
                     result_facts.append(add_decrementfn(x+1,y-1))
+                    result_facts.append(add_opened(x+1,y-1))
             if (y >= 0 and y <= self.size-1) and (x >= 0 and x <= self.size-2):
                 if self.isi[x+1][y].visibility == 0:
                     self.open(x+1,y)
                     result_facts.append(add_decrementfn(x+1,y))
+                    result_facts.append(add_opened(x+1,y))
 
     def isWin(self):
         for x in range(self.size):
@@ -247,7 +256,7 @@ else:
     for i in range(size):
         for k in range(size):
             result_facts.append(add_val(i,k,game.isi[i][k].status))
-            if (((i == 0) and (k == 0)) or ((i == size-1) and (k == size-1)) or ((i == 0) and (k == 0)) or ((i == size-1) and (k == size-1))):
+            if (((i == 0) and (k == 0)) or ((i == size-1) and (k == size-1)) or ((i == 0) and (k == size-1)) or ((i == size-1) and (k == 0))):
                 result_facts.append(add_tile(i,k,3,0,-1))
             elif ((i == 0) or (k == 0) or (i == size-1) or (k == size-1)):
                 result_facts.append(add_tile(i,k,5,0,-1))
@@ -258,22 +267,40 @@ else:
 
     while not game.isWin():
         for f in result_facts:
-            print(f)
-            faktas = env.assert_string(f)
-
+            print("ini fakta yang mau diassert: " + f)
+            faktas = env.assert_string(str(f))
+        print()
+        print()
         env.run()
         result_facts.clear()
 
         for factz in env.facts():
-            result_facts.append(factz)
+            factx = str(factz)
+            substringFactx = ""
+            mulaiTarik = False
+            for i in range(len(factx)):
+                if (factx[i] == "(" and not mulaiTarik):
+                    mulaiTarik = True
+                    substringFactx += factx[i]
+                elif mulaiTarik:
+                    substringFactx += factx[i]
+            # print("ini hasil ekstrrask: " + substringFactx)
+            result_facts.append(substringFactx)
+        print()
+        print()
             
         for i in range(len(result_facts)):
+            print("ini hasil result fact: " + result_facts[i])
             if(result_facts[i][1]=="o"):
+                # print("ini hasil result factoooo: " + str(result_facts[i]))
                 x = parse_opened(result_facts[i])
                 game.open(x[0],x[1])
             elif(result_facts[i][1]=="b"):
+                # print("ini hasil result factbbbb: " + result_facts[i])
                 x = parse_bomb(result_facts[i])
                 game.flag(x[0],x[1])
             else:
                 pass
+        print()
+        print()
         
