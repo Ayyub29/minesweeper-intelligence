@@ -17,6 +17,16 @@ def add_tile(x,y,h,f,v):
     return "(tile (x "+str(x)+") (y "+str(y)+") (hidden_neigh "+str(h)+") (flag_neigh "+str(f)+") (value "+str(v)+"))"
 
 def add_decrementfn(x,y):
+    # s = "(decrement_fn (x "+str(x-1)+") (y "+str(y-1)+"))"
+    # s +=  "(decrement_fn (x "+str(x-1)+") (y "+str(y)+"))"
+    # s += "(decrement_fn (x "+str(x-1)+") (y "+str(y+1)+"))"
+    # s += "(decrement_fn (x "+str(x)+") (y "+str(y-1)+"))"
+    # s += "(decrement_fn (x "+str(x)+") (y "+str(y+1)+"))"
+    # s += "(decrement_fn (x "+str(x+1)+") (y "+str(y-1)+"))"
+    # s +=  "(decrement_fn (x "+str(x+1)+") (y "+str(y)+"))"
+    # s += "(decrement_fn (x "+str(x+1)+") (y "+str(y+1)+"))"
+
+
     return "(decrement_fn (x "+str(x)+") (y "+str(y)+"))"
 
 def parse_opened(text):
@@ -146,44 +156,141 @@ class papan(object):
             if (y >=0 and y <= self.size-2) and (x >= 0 and x <= self.size-1):
                 if self.isi[x][y+1].visibility == 0:
                     self.open(x,y+1)
-                    result_facts.append(add_decrementfn(x,y+1))
+                    # result_facts.append(add_decrementfn(x,y+1))
                     result_facts.append(add_opened(x,y+1))
+
+                    result_facts.append(add_decrementfn(x-1,y))
+                    result_facts.append(add_decrementfn(x-1,y+1))
+                    result_facts.append(add_decrementfn(x-1,y+2))
+
+                    result_facts.append(add_decrementfn(x,y))
+                    
+                    result_facts.append(add_decrementfn(x,y+2))
+
+                    result_facts.append(add_decrementfn(x+1,y))
+                    result_facts.append(add_decrementfn(x+1,y+1))
+                    result_facts.append(add_decrementfn(x+1,y+2))
+                    
+
+
                     # result_facts.append(add_tile(x,y+1))
             if (y >=1 and y <= self.size-1) and (x >= 0 and x <= self.size-1):
                 if self.isi[x][y-1].visibility == 0:
                     self.open(x,y-1)
-                    result_facts.append(add_decrementfn(x,y-1))
+                    # result_facts.append(add_decrementfn(x,y-1))
                     result_facts.append(add_opened(x,y-1))
+                    
+                    result_facts.append(add_decrementfn(x-1,y-2))
+                    result_facts.append(add_decrementfn(x-1,y-1))
+                    result_facts.append(add_decrementfn(x-1,y))
+
+                    result_facts.append(add_decrementfn(x,y-2))
+                    
+                    result_facts.append(add_decrementfn(x,y))
+
+                    result_facts.append(add_decrementfn(x+1,y-2))
+                    result_facts.append(add_decrementfn(x+1,y-1))
+                    result_facts.append(add_decrementfn(x+1,y))
+                    
             if (y >= 1 and y <= self.size-1) and (x >= 1 and x <= self.size-1):
                 if self.isi[x-1][y-1].visibility == 0:
                     self.open(x-1,y-1)
-                    result_facts.append(add_decrementfn(x-1,y-1))
+                    # result_facts.append(add_decrementfn(x-1,y-1))
                     result_facts.append(add_opened(x-1,y-1))
+
+                    result_facts.append(add_decrementfn(x-2,y-2))
+                    result_facts.append(add_decrementfn(x-2,y-1))
+                    result_facts.append(add_decrementfn(x-2,y))
+
+                    result_facts.append(add_decrementfn(x-1,y-2))
+                    
+                    result_facts.append(add_decrementfn(x-1,y))
+
+                    result_facts.append(add_decrementfn(x-0,y-2))
+                    result_facts.append(add_decrementfn(x-0,y-1))
+                    result_facts.append(add_decrementfn(x-0,y))
             if (y >= 0 and y <= self.size-2) and (x >= 1 and x <= self.size-1):
                 if self.isi[x-1][y+1].visibility == 0:
                     self.open(x-1,y+1)
-                    result_facts.append(add_decrementfn(x-1,y+1))
+                    # result_facts.append(add_decrementfn(x-1,y+1))
                     result_facts.append(add_opened(x-1,y+1))
+
+                    result_facts.append(add_decrementfn(x-2,y))
+                    result_facts.append(add_decrementfn(x-2,y+1))
+                    result_facts.append(add_decrementfn(x-2,y+2))
+
+                    result_facts.append(add_decrementfn(x-1,y))
+                    
+                    result_facts.append(add_decrementfn(x-1,y+2))
+
+                    result_facts.append(add_decrementfn(x,y))
+                    result_facts.append(add_decrementfn(x,y+1))
+                    result_facts.append(add_decrementfn(x,y+2))
             if (y >= 0 and y <= self.size-1) and (x >= 1 and x <= self.size-1):
                 if self.isi[x-1][y].visibility == 0:
                     self.open(x-1,y)
-                    result_facts.append(add_decrementfn(x-1,y))
+                    # result_facts.append(add_decrementfn(x-1,y))
                     result_facts.append(add_opened(x-1,y))
+
+                    result_facts.append(add_decrementfn(x-2,y-1))
+                    result_facts.append(add_decrementfn(x-2,y))
+                    result_facts.append(add_decrementfn(x-2,y+1))
+
+                    result_facts.append(add_decrementfn(x-1,y-1))
+                    
+                    result_facts.append(add_decrementfn(x-1,y+1))
+
+                    result_facts.append(add_decrementfn(x,y-1))
+                    result_facts.append(add_decrementfn(x,y))
+                    result_facts.append(add_decrementfn(x,y+1))
             if (y >=0 and y <= self.size-2) and (x >= 0 and x <= self.size-2):
                 if self.isi[x+1][y+1].visibility == 0:
                     self.open(x+1,y+1)
-                    result_facts.append(add_decrementfn(x+1,y+1))
+                    # result_facts.append(add_decrementfn(x+1,y+1))
                     result_facts.append(add_opened(x+1,y+1))
+                    result_facts.append(add_decrementfn(x,y))
+                    result_facts.append(add_decrementfn(x,y+1))
+                    result_facts.append(add_decrementfn(x,y+2))
+
+                    result_facts.append(add_decrementfn(x+1,y))
+                
+                    result_facts.append(add_decrementfn(x+1,y+2))
+
+                    result_facts.append(add_decrementfn(x+2,y))
+                    result_facts.append(add_decrementfn(x+2,y+1))
+                    result_facts.append(add_decrementfn(x+2,y+2))
             if (y >= 1 and y <= self.size-1) and (x >= 0 and x <= self.size-2):
                 if self.isi[x+1][y-1].visibility == 0:
                     self.open(x+1,y-1)
-                    result_facts.append(add_decrementfn(x+1,y-1))
+                    # result_facts.append(add_decrementfn(x+1,y-1))
                     result_facts.append(add_opened(x+1,y-1))
+                    result_facts.append(add_decrementfn(x,y-2))
+                    result_facts.append(add_decrementfn(x,y-1))
+                    result_facts.append(add_decrementfn(x,y))
+
+                    result_facts.append(add_decrementfn(x+1,y-2))
+                    
+                    result_facts.append(add_decrementfn(x+1,y))
+
+                    result_facts.append(add_decrementfn(x+2,y-2))
+                    result_facts.append(add_decrementfn(x+2,y-1))
+                    result_facts.append(add_decrementfn(x+2,y))
             if (y >= 0 and y <= self.size-1) and (x >= 0 and x <= self.size-2):
                 if self.isi[x+1][y].visibility == 0:
                     self.open(x+1,y)
-                    result_facts.append(add_decrementfn(x+1,y))
+                    # result_facts.append(add_decrementfn(x+1,y))
                     result_facts.append(add_opened(x+1,y))
+                    result_facts.append(add_decrementfn(x,y-1))
+                    result_facts.append(add_decrementfn(x,y))
+                    result_facts.append(add_decrementfn(x,y+1))
+
+                    result_facts.append(add_decrementfn(x+1,y-1))
+                    result_facts.append(add_decrementfn(x+1,y))
+                    result_facts.append(add_decrementfn(x+1,y+1))
+
+                    result_facts.append(add_decrementfn(x+2,y-1))
+                    result_facts.append(add_decrementfn(x+2,y))
+                    result_facts.append(add_decrementfn(x+2,y+1))
 
     def isWin(self):
         for x in range(self.size):
