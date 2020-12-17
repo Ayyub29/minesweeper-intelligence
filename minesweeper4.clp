@@ -80,7 +80,53 @@
 ;;;)
 
 ; ;;cek chacha
-(deffacts initial-states 
+;(deffacts initial-states 
+;    (opened (x 0) (y 0))
+;    (opened (x 0) (y 1))
+;    (opened (x 0) (y 2))
+;    (opened (x 0) (y 3))
+;    (opened (x 1) (y 0))
+;    (opened (x 1) (y 1))
+;    (opened (x 1) (y 2))
+;    (opened (x 1) (y 3))
+;    (opened (x 2) (y 0))
+;    (opened (x 2) (y 1))
+;    (opened (x 3) (y 0))
+;    (opened (x 3) (y 1))
+;    (opened (x 3) (y 2))
+;    (opened (x 4) (y 0))
+;    (opened (x 4) (y 1))
+;    (opened (x 4) (y 2))
+;    (tile (x 0) (y 0) (hidden_neigh 0) (flag_neigh 0) (value 0))
+;    (tile (x 0) (y 1) (hidden_neigh 0) (flag_neigh 0) (value 0))
+;    (tile (x 0) (y 2) (hidden_neigh 0) (flag_neigh 0) (value 0))
+;    (tile (x 0) (y 3) (hidden_neigh 2) (flag_neigh 0) (value 1))
+;    (tile (x 0) (y 4) (hidden_neigh 1) (flag_neigh 0) (value -1))
+;    (tile (x 1) (y 0) (hidden_neigh 0) (flag_neigh 0) (value 0))
+;    (tile (x 1) (y 1) (hidden_neigh 1) (flag_neigh 0) (value 1))
+;    (tile (x 1) (y 2) (hidden_neigh 2) (flag_neigh 0) (value 1))
+;    (tile (x 1) (y 3) (hidden_neigh 5) (flag_neigh 0) (value 3))
+;    (tile (x 1) (y 4) (hidden_neigh 3) (flag_neigh 0) (value -1))
+;    (tile (x 2) (y 0) (hidden_neigh 0) (flag_neigh 0) (value 0))
+;    (tile (x 2) (y 1) (hidden_neigh 1) (flag_neigh 0) (value 1))
+;    (tile (x 2) (y 2) (hidden_neigh 2) (flag_neigh 0) (value -1))
+;    (tile (x 2) (y 3) (hidden_neigh 5) (flag_neigh 0) (value -1))
+;    (tile (x 2) (y 4) (hidden_neigh 4) (flag_neigh 0) (value -1))
+;    (tile (x 3) (y 0) (hidden_neigh 0) (flag_neigh 0) (value 0))
+;    (tile (x 3) (y 1) (hidden_neigh 1) (flag_neigh 0) (value 1))
+;    (tile (x 3) (y 2) (hidden_neigh 4) (flag_neigh 0) (value 2))
+;    (tile (x 3) (y 3) (hidden_neigh 6) (flag_neigh 0) (value -1))
+;    (tile (x 3) (y 4) (hidden_neigh 5) (flag_neigh 0) (value -1))
+;    (tile (x 4) (y 0) (hidden_neigh 0) (flag_neigh 0) (value 0))
+;    (tile (x 4) (y 1) (hidden_neigh 0) (flag_neigh 0) (value 0))
+;    (tile (x 4) (y 2) (hidden_neigh 2) (flag_neigh 0) (value 1))
+;    (tile (x 4) (y 3) (hidden_neigh 3) (flag_neigh 0) (value -1))
+;    (tile (x 4) (y 4) (hidden_neigh 3) (flag_neigh 0) (value -1))
+;)
+;
+
+
+(deffacts initial-states
     (opened (x 0) (y 0))
     (opened (x 0) (y 1))
     (opened (x 0) (y 2))
@@ -91,6 +137,7 @@
     (opened (x 1) (y 3))
     (opened (x 2) (y 0))
     (opened (x 2) (y 1))
+    (opened (x 2) (y 2))
     (opened (x 2) (y 3))
     (opened (x 3) (y 0))
     (opened (x 3) (y 1))
@@ -104,49 +151,32 @@
     (tile (x 0) (y 3) (hidden_neigh 2) (flag_neigh 0) (value 1))
     (tile (x 0) (y 4) (hidden_neigh 1) (flag_neigh 0) (value -1))
     (tile (x 1) (y 0) (hidden_neigh 0) (flag_neigh 0) (value 0))
-    (tile (x 1) (y 1) (hidden_neigh 1) (flag_neigh 0) (value 1))
-    (tile (x 1) (y 2) (hidden_neigh 2) (flag_neigh 0) (value 1))
-    (tile (x 1) (y 3) (hidden_neigh 5) (flag_neigh 0) (value 3))
-    (tile (x 1) (y 4) (hidden_neigh 3) (flag_neigh 0) (value -1))
+    (tile (x 1) (y 1) (hidden_neigh 0) (flag_neigh 0) (value 0))
+    (tile (x 1) (y 2) (hidden_neigh 0) (flag_neigh 0) (value 0))
+    (tile (x 1) (y 3) (hidden_neigh 3) (flag_neigh 0) (value 2))
+    (tile (x 1) (y 4) (hidden_neigh 2) (flag_neigh 0) (value -1))
     (tile (x 2) (y 0) (hidden_neigh 0) (flag_neigh 0) (value 0))
-    (tile (x 2) (y 1) (hidden_neigh 1) (flag_neigh 0) (value 1))
-    (tile (x 2) (y 2) (hidden_neigh 2) (flag_neigh 0) (value -1))
-    (tile (x 2) (y 3) (hidden_neigh 5) (flag_neigh 0) (value -1))
-    (tile (x 2) (y 4) (hidden_neigh 4) (flag_neigh 0) (value -1))
+    (tile (x 2) (y 1) (hidden_neigh 0) (flag_neigh 0) (value 0))
+    (tile (x 2) (y 2) (hidden_neigh 1) (flag_neigh 0) (value 1))
+    (tile (x 2) (y 3) (hidden_neigh 4) (flag_neigh 0) (value 3))
+    (tile (x 2) (y 4) (hidden_neigh 3) (flag_neigh 0) (value -1))
     (tile (x 3) (y 0) (hidden_neigh 0) (flag_neigh 0) (value 0))
-    (tile (x 3) (y 1) (hidden_neigh 1) (flag_neigh 0) (value 1))
-    (tile (x 3) (y 2) (hidden_neigh 4) (flag_neigh 0) (value 2))
-    (tile (x 3) (y 3) (hidden_neigh 6) (flag_neigh 0) (value -1))
-    (tile (x 3) (y 4) (hidden_neigh 5) (flag_neigh 0) (value -1))
+    (tile (x 3) (y 1) (hidden_neigh 0) (flag_neigh 0) (value 0))
+    (tile (x 3) (y 2) (hidden_neigh 2) (flag_neigh 0) (value 1))
+    (tile (x 3) (y 3) (hidden_neigh 4) (flag_neigh 0) (value -1))
+    (tile (x 3) (y 4) (hidden_neigh 4) (flag_neigh 0) (value -1))
     (tile (x 4) (y 0) (hidden_neigh 0) (flag_neigh 0) (value 0))
     (tile (x 4) (y 1) (hidden_neigh 0) (flag_neigh 0) (value 0))
     (tile (x 4) (y 2) (hidden_neigh 2) (flag_neigh 0) (value 1))
     (tile (x 4) (y 3) (hidden_neigh 3) (flag_neigh 0) (value -1))
     (tile (x 4) (y 4) (hidden_neigh 3) (flag_neigh 0) (value -1))
-    (bomb (x 1) (y 4))
-    (bomb (x 2) (y 2))
-    (bomb (x 2) (y 4))
-    (bomb (x 3) (y 3))
-)
 
+)
 
 (defrule startup
     =>
     (printout t crlf "Minesweeper" crlf crlf)
     (printout t " 3x3 " crlf)
-)
-
-(defrule openn
-    (opened (x ?x) (y ?y))
-    (tile (x ?x) (y ?y) (hidden_neigh ?h) (flag_neigh ?f) (value ?v))
-
-    (val (x ?a) (y ?b) (v ?c))
-    (test (eq ?a ?x))
-    (test (eq ?b ?y))
-    =>
-    (assert 
-        (tile (x ?x) (y ?y) (hidden_neigh ?h) (flag_neigh ?f) (value ?c))
-    )
 )
 
 
@@ -164,15 +194,11 @@
             (and (or (test (eq ?x (+ ?x1 1))) (test (eq ?x (+ ?x1 -1))))  (or (test (eq ?y (+ ?y1 1))) (test (eq ?y (+ ?y1 -1)))) ) 
         )
     )
-
-    (val (x ?a) (y ?b) (v ?c))
-    (test (eq ?a ?x1))
-    (test (eq ?b ?y1))
  
     =>
     (retract ?gg)
     (assert (opened (x ?x1) (y ?y1))
-            (tile (x ?x1) (y ?y1) (hidden_neigh ?h1) (flag_neigh ?f1) (value ?c))
+            (tile (x ?x1) (y ?y1) (hidden_neigh ?h1) (flag_neigh ?f1) (value 0))
             (decrement_fn (x (+ ?x1 -1)) (y (+ ?y1 -1)) )
             (decrement_fn (x (+ ?x1 -1)) (y ?y1) )
             (decrement_fn (x (+ ?x1 -1)) (y (+ ?y1 1)) )
@@ -193,7 +219,8 @@
 
 (defrule isBomb
     (tile (x ?x) (y ?y) (hidden_neigh ?h) (flag_neigh ?f) (value ?v))
-    (test (eq ?v ?h))
+    (test (eq ?v (- ?h ?f)))
+    
 
     ?gg <- (tile (x ?x1) (y ?y1) (hidden_neigh ?h1) (flag_neigh ?f1) (value ?v1))
     (test (eq ?v1 -1))
