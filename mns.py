@@ -20,15 +20,15 @@ def add_decrementfn(x,y):
     return "(decrement_fn (x "+str(x)+") (y "+str(y)+"))"
 
 def parse_opened(text):
-    x = text[11]
-    y = text[17]
-    print("Bot membuka: " + x + "," + y)
+    print(text)
+    x = text[12]
+    y = text[18]
     return int(x),int(y)
 
 def parse_bomb(text):
-    x = text[9]
-    y = text[15]
-    print("Bot menandai: " + x + "," + y)
+    print(text)
+    x = text[10]
+    y = text[16]
     return int(x),int(y)
 
 
@@ -139,40 +139,6 @@ class papan(object):
         self.isi[x][y].visibility = 2
         
 
-        # if self.isi[x][y].status == 0:
-        #     if (y >=0 and y <= self.size-2) and (x >= 0 and x <= self.size-1):
-        #         if self.isi[x][y+1].visibility == 0:
-        #             self.open(x,y+1)
-
-        #     if (y >=1 and y <= self.size-1) and (x >= 0 and x <= self.size-1):
-        #         if self.isi[x][y-1].visibility == 0:
-        #             self.open(x,y-1)
-
-        #     if (y >= 1 and y <= self.size-1) and (x >= 1 and x <= self.size-1):
-        #         if self.isi[x-1][y-1].visibility == 0:
-        #             self.open(x-1,y-1)
-
-        #     if (y >= 0 and y <= self.size-2) and (x >= 1 and x <= self.size-1):
-        #         if self.isi[x-1][y+1].visibility == 0:
-        #             self.open(x-1,y+1)
-
-        #     if (y >= 0 and y <= self.size-1) and (x >= 1 and x <= self.size-1):
-        #         if self.isi[x-1][y].visibility == 0:
-        #             self.open(x-1,y)
-
-        #     if (y >=0 and y <= self.size-2) and (x >= 0 and x <= self.size-2):
-        #         if self.isi[x+1][y+1].visibility == 0:
-        #             self.open(x+1,y+1)
-
-        #     if (y >= 1 and y <= self.size-1) and (x >= 0 and x <= self.size-2):
-        #         if self.isi[x+1][y-1].visibility == 0:
-        #             self.open(x+1,y-1)
-
-        #     if (y >= 0 and y <= self.size-1) and (x >= 0 and x <= self.size-2):
-        #         if self.isi[x+1][y].visibility == 0:
-        #             self.open(x+1,y)
-
-
     def isWin(self):
         for x in range(self.size):
             for y in range(self.size):
@@ -234,13 +200,13 @@ else:
     print()
     game = papan(size,arBomb)
 
-    iterasi = 0
-    print("Berikut Hasil Iterasi ke-" + str(iterasi) )
-    game.draw()
-    iterasi += 1
+
     env = clips.Environment()
     env.load('minesweeper6.clp')
 
+    x = "(gameover 1)"
+
+    # result_facts.append(add_opened(0,0))
     for i in range(size):
         for k in range(size):
             result_facts.append(add_val(i,k,game.isi[i][k].status))
@@ -255,8 +221,16 @@ else:
 
     game.open_result(0,0)
 
+    inka = 0
+
     for f in result_facts:
+        print("result facts "+ str(inka) + ": " + f)
         faktas = env.assert_string(f)
+        inka+=1
+            
+    print()
+    print()
+
     env.run()
     
     print()
@@ -266,39 +240,5 @@ else:
 
     for factz in env.facts():
         factx = str(factz)
+        print(factx)
         result_facts.append(factx)
-
-    daftar_fakta_baru = []
-
-    for faktaBaru in result_facts:
-        substringFactx = ""
-        mulaiTarik = False
-        for i in range(len(faktaBaru)):
-            if (faktaBaru[i] == "(" and not mulaiTarik):
-                mulaiTarik = True
-                substringFactx += faktaBaru[i]
-            elif mulaiTarik:
-                substringFactx += faktaBaru[i]
-        daftar_fakta_baru.append(substringFactx)
-        
-    for i in range(len(daftar_fakta_baru)):
-        if(daftar_fakta_baru[i][1]=="o"):
-            x,y = parse_opened(daftar_fakta_baru[i])
-            game.open(x,y)
-            print("Berikut Hasil Iterasi ke-" + str(iterasi) )
-            game.draw()
-            iterasi += 1
-            print()
-            print()
-        elif(daftar_fakta_baru[i][1]=="b"):
-            x,y = parse_bomb(daftar_fakta_baru[i])
-            game.flag(x,y)
-            print("Berikut Hasil Iterasi ke-" + str(iterasi) )
-            game.draw()
-            iterasi += 1
-            print()
-            print()
-        else:
-            pass
-
-    print("Congratulations, Your Bot Win!!")

@@ -1,6 +1,36 @@
 import pygame
 import time
 import math
+import clips
+
+result_facts = []
+
+def add_isClear(x,y,h,f,v):
+    return "(clear (x "+str(x)+") (y "+str(y)+"))"
+
+def add_opened(x,y):
+    return "(opened (x "+str(x)+") (y "+str(y)+"))"
+
+def add_val(x,y,v):
+    return "(val (x "+str(x)+") (y "+str(y)+") (v "+str(v)+"))"
+
+def add_tile(x,y,h,f,v):
+    return "(tile (x "+str(x)+") (y "+str(y)+") (hidden_neigh "+str(h)+") (flag_neigh "+str(f)+") (value "+str(v)+"))"
+
+def add_decrementfn(x,y):
+    return "(decrement_fn (x "+str(x)+") (y "+str(y)+"))"
+
+def parse_opened(text):
+    x = text[11]
+    y = text[17]
+    print("Bot membuka: " + x + "," + y)
+    return int(x),int(y)
+
+def parse_bomb(text):
+    x = text[9]
+    y = text[15]
+    print("Bot menandai: " + x + "," + y)
+    return int(x),int(y)
 
 class isiPapan(object):
 
@@ -25,15 +55,12 @@ class isiPapan(object):
         if(self.visibility == 0):
             isiPapan = pygame.transform.scale(self.arrIsipapan[6], (size,size))
             win.blit(isiPapan, ((382 + self.x * int(55 * (8/self.size))), 60 + (self.y * int(58 * (8/self.size)))))
-            # pygame.draw.rect(win, (255,0,0), self.hitbox,2)
         elif(self.visibility == 1):
             isiPapan = pygame.transform.scale(self.arrIsipapan[7], (size,size))
             win.blit(isiPapan, ((382 + self.x * int(55 * (8/self.size))), 60 + (self.y * int(58 * (8/self.size)))))
-            # pygame.draw.rect(win, (255,0,0), self.hitbox,2)
         else:
             isiPapan = pygame.transform.scale(self.arrIsipapan[self.status], (size,size))
             win.blit(isiPapan, ((382 + self.x * int(55 * (8/self.size))), 60 + (self.y * int(58 * (8/self.size)))))
-            # pygame.draw.rect(win, (255,0,0), self.hitbox,2)
 
 class papan(object):
     def __init__(self,size,arBomb):
@@ -45,7 +72,6 @@ class papan(object):
         self.isi = [[isiPapan(0,0,row,column,size) for row in range(size)] for column in range(size)]
         self.startHitbox = (323, 320, 315, 70)
         self.restartHitbox = (23, 300, 240, 50)
-        # pygame.draw.rect(win, (255,0,0), self.startHitbox)
 
         for num in range(self.amtBomb):
             x = arBomb[num][0]
@@ -88,7 +114,6 @@ class papan(object):
                     self.isi[x+1][y].status += 1 # bottom center
 
     def draw(self,win):
-        # pygame.draw.rect(win, (255,0,0), self.restartHitbox, 2)
         for x in range(self.size):
             for y in range(self.size):
                 self.isi[x][y].draw(win)
@@ -110,31 +135,22 @@ class papan(object):
 
     def open(self,x,y):
         self.isi[x][y].visibility = 2
-        if self.isi[x][y].status == 0:
-            if (y >=0 and y <= self.size-2) and (x >= 0 and x <= self.size-1):
-                if self.isi[x][y+1].visibility == 0:
-                    self.open(x,y+1)
-            if (y >=1 and y <= self.size-1) and (x >= 0 and x <= self.size-1):
-                if self.isi[x][y-1].visibility == 0:
-                    self.open(x,y-1)
-            if (y >= 1 and y <= self.size-1) and (x >= 1 and x <= self.size-1):
-                if self.isi[x-1][y-1].visibility == 0:
-                    self.open(x-1,y-1)
-            if (y >= 0 and y <= self.size-2) and (x >= 1 and x <= self.size-1):
-                if self.isi[x-1][y+1].visibility == 0:
-                    self.open(x-1,y+1)
-            if (y >= 0 and y <= self.size-1) and (x >= 1 and x <= self.size-1):
-                if self.isi[x-1][y].visibility == 0:
-                    self.open(x-1,y)
-            if (y >=0 and y <= self.size-2) and (x >= 0 and x <= self.size-2):
-                if self.isi[x+1][y+1].visibility == 0:
-                    self.open(x+1,y+1)
-            if (y >= 1 and y <= self.size-1) and (x >= 0 and x <= self.size-2):
-                if self.isi[x+1][y-1].visibility == 0:
-                    self.open(x+1,y-1)
-            if (y >= 0 and y <= self.size-1) and (x >= 0 and x <= self.size-2):
-                if self.isi[x+1][y].visibility == 0:
-                    self.open(x+1,y)
+
+    def open_result(self,x,y):
+        self.isi[x][y].visibility = 2
+
+        result_facts.append(add_opened(x,y))
+        
+        result_facts.append(add_decrementfn(x-1,y-1))
+        result_facts.append(add_decrementfn(x-1,y+1))
+        result_facts.append(add_decrementfn(x-1,y))
+
+        result_facts.append(add_decrementfn(x,y-1))
+        result_facts.append(add_decrementfn(x,y+1))
+
+        result_facts.append(add_decrementfn(x+1,y-1))
+        result_facts.append(add_decrementfn(x+1,y+1))
+        result_facts.append(add_decrementfn(x+1,y)) 
 
     def isWin(self):
         for x in range(self.size):
@@ -196,13 +212,6 @@ def redrawGameWindow():
     if gameStatus == 1:
         game.draw(win)
         game.drawScore(win)
-    if gameStatus == 2:
-        game.draw(win)
-        game.drawScore(win)
-        if game.gameState == 1:
-            game.drawWin()
-        elif game.gameState == -1:
-            game.drawLose()
     pygame.display.update()
 
 size = 0
@@ -245,11 +254,31 @@ else:
     print()
     print()
 
-    pygame.init()
-    win = pygame.display.set_mode((960, 540))
-
     game = papan(size,arBomb)
     
+    env = clips.Environment()
+    env.load('minesweeper6.clp')
+
+    for i in range(size):
+        for k in range(size):
+            result_facts.append(add_val(i,k,game.isi[i][k].status))
+            if ((i == 0) and (k == 0)):
+                result_facts.append(add_tile(i,k,3,0,0))
+            elif (((i == size-1) and (k == size-1)) or ((i == 0) and (k == size-1)) or ((i == size-1) and (k == 0))):
+                result_facts.append(add_tile(i,k,3,0,-1))
+            elif ((i == 0) or (k == 0) or (i == size-1) or (k == size-1)):
+                result_facts.append(add_tile(i,k,5,0,-1))
+            else:
+                result_facts.append(add_tile(i,k,8,0,-1))
+
+    game.open_result(0,0)
+
+    for f in result_facts:
+        faktas = env.assert_string(f)
+    env.run()
+
+    pygame.init()
+    win = pygame.display.set_mode((960, 540))
     pygame.display.set_caption("Let's Play Minesweeper!") # Judul gamenya
 
     run = True
@@ -260,7 +289,7 @@ else:
 
     LEFT = 1
     RIGHT = 3
-
+    l = 0
     while run:
         if gameStatus == 0:
             for event in pygame.event.get():
@@ -272,36 +301,43 @@ else:
                         win.blit(bg1, (0,0))
         elif gameStatus == 1:
             for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN: 
-                    x, y = event.pos
-                    if pygame.Rect(game.restartHitbox).collidepoint(event.pos):
-                        # print(x,y)
-                        game.restart()
-                        gameStatus = 1
-                    for i in range(game.size):
-                        for j in range(game.size):
-                            if pygame.Rect(game.isi[i][j].hitbox).collidepoint(event.pos) and game.isi[i][j].visibility == 0:
-                                if event.button == LEFT:
-                                    # print(x,y)
-                                    game.open(i,j)
-                                elif event.button == RIGHT:
-                                    # print(x,y)
-                                    game.flag(i,j)
-                            elif pygame.Rect(game.isi[i][j].hitbox).collidepoint(event.pos) and game.isi[i][j].visibility == 1:
-                                if event.button == RIGHT:
-                                    # print(x,y)
-                                    game.unflag(i,j)
-            if game.isWin() or game.isLose():
-                game.setGameState()
-                gameStatus = 2
-        else:
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN: 
-                    x, y = event.pos
-                    if pygame.Rect(game.restartHitbox).collidepoint(event.pos):
-                        # print(x,y)
-                        game.restart()
-                        gameStatus = 1
+                result_facts.clear()
+
+                for factz in env.facts():
+                    factx = str(factz)
+                    result_facts.append(factx)
+
+                daftar_fakta_baru = []
+
+                for faktaBaru in result_facts:
+                    substringFactx = ""
+                    mulaiTarik = False
+                    for i in range(len(faktaBaru)):
+                        if (faktaBaru[i] == "(" and not mulaiTarik):
+                            mulaiTarik = True
+                            substringFactx += faktaBaru[i]
+                        elif mulaiTarik:
+                            substringFactx += faktaBaru[i]
+                    daftar_fakta_baru.append(substringFactx)
+                
+                daftar_aksi = []
+
+                for i in range(len(daftar_fakta_baru)):
+                    if(daftar_fakta_baru[i][1]=="o"):
+                        daftar_aksi.append(daftar_fakta_baru[i])
+                    elif(daftar_fakta_baru[i][1]=="b"):
+                        daftar_aksi.append(daftar_fakta_baru[i])
+                    else:
+                        pass
+
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE: #kalau dia mencet sesuatu
+                    if(daftar_aksi[l][1]=="o"):
+                        x,y = parse_opened(daftar_aksi[l])
+                        game.open(x,y)
+                    if(daftar_aksi[l][1]=="b"):
+                        x,y = parse_bomb(daftar_aksi[l])
+                        game.flag(x,y)
+                    l += 1
 
         if event.type == pygame.QUIT:
             run = False
